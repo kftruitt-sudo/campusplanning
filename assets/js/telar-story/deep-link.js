@@ -25,11 +25,12 @@
  * The _isScrollDrivenHashUpdate guard prevents feedback loops between the
  * hash writes here and any hashchange listener.
  *
- * @version v1.1.0
+ * @version v1.4.0
  */
 
 import { state } from './state.js';
 import { activateCard } from './card-pool.js';
+import { goToStep } from './navigation.js';
 import { openPanel } from './panels.js';
 
 // ── Guard flag ────────────────────────────────────────────────────────────────
@@ -163,6 +164,110 @@ export function isScrollDrivenHashUpdate() {
 }
 
 /**
+ * Navigate back to the intro / title card from within the story.
+ *
+ * Scrolls to position 0 (or activates intro in button mode), restores the
+ * intro card via goToStep(-1), hides all viewer plates, and clears the hash.
+ */
+export function navigateToIntro() {
+  // Hide all active viewer plates
+  if (state.viewerPlates) {
+    for (const key of Object.keys(state.viewerPlates)) {
+      const plate = state.viewerPlates[key];
+      if (plate) plate.classList.remove('is-active');
+    }
+  }
+
+  if (state.lenis) {
+    state.lenis.stop();
+    document.documentElement.scrollTop = 0;
+    state.lenis.animatedScroll = 0;
+    state.lenis.targetScroll = 0;
+    state.currentIndex = -1;
+    state.scrollPosition = 0;
+    requestAnimationFrame(() => { state.lenis.start(); });
+  } else {
+    state.currentMobileStep = -1;
+    state.mobileInIntro = true;
+    state.steps.forEach(step => step.classList.remove('mobile-active'));
+  }
+
+  // Use the navigation module to restore intro card visuals
+  goToStep(-1, 'backward');
+  writeHash();
+}
+
+/**
+ * Navigate to a specific step from within the story (e.g. TOC links).
+ *
+ * Unlike applyDeepLinkOnLoad (which runs once at page load), this can be
+ * called at any time during the story. It jumps the scroll position and
+ * activates the target card, then updates the URL hash.
+ *
+ * @param {number} stepNumber - 1-based step number (matches CSV step column).
+ */
+export function navigateToStep(stepNumber) {
+  const targetIndex = stepNumber - 1;
+  if (targetIndex < 0 || targetIndex >= state.steps.length) return;
+
+  // Hide all active viewer plates before jumping — prevents plates from
+  // nearby steps bleeding through when the target is a title/section card.
+  if (state.viewerPlates) {
+    for (const key of Object.keys(state.viewerPlates)) {
+      const plate = state.viewerPlates[key];
+      if (plate) plate.classList.remove('is-active');
+    }
+  }
+
+  if (state.lenis) {
+    const targetPx = (targetIndex + 1) * window.innerHeight;
+
+    // Clean INSTANT jump via Lenis's supported API.
+    //
+    // The previous approach — stop() → write document.scrollTop → poke
+    // animatedScroll/targetScroll → rAF start() — did NOT land cleanly. On
+    // start(), Lenis re-syncs animatedScroll from the real DOM scroll and then
+    // SMOOTH-ANIMATES from the stale position to the target instead of jumping.
+    // That stray animation drives the per-frame IIIF interpolation
+    // (lerpIiifPosition); when the scroll reaches the integer step,
+    // lerpIiifPosition early-returns (progress ≈ 0), so the viewer is left
+    // frozen at whatever the last sub-integer frame applied — a partially
+    // interpolated zoom. Measured on WebKit (centering sweep, Common desktop
+    // 1920×1080, step 4, the zoom-OUT from authored 10× to 2.9×): the viewer
+    // stuck at effNzoom ≈ 4–7× and never converged. It is timing-gated, so it
+    // only surfaced under the slow (trace-recording) Playwright runner; the
+    // keyboard/button paths never hit it because lenis.scrollTo() eases cleanly
+    // to the exact endpoint, landing the final lerp frame at the authored target.
+    //
+    // immediate:true performs the jump with NO animation — so there is no lerp
+    // staircase, and nothing for the Snap plugin's lock to interrupt (the lock
+    // only blocks ANIMATED multi-step scrollTo, which is why the old code
+    // bypassed scrollTo at all). force:true overrides the lock/stopped state.
+    // The viewer then simply keeps the target set by activateCard below.
+    state.lenis.scrollTo(targetPx, { immediate: true, force: true });
+    if (state.snap) state.snap.currentSnapIndex = targetIndex + 1; // keep Snap aligned (matches keyboardNav)
+
+    activateCard(targetIndex, 'forward');
+    state.currentIndex = targetIndex;
+    state.scrollPosition = targetIndex + 1;
+  } else {
+    state.currentMobileStep = targetIndex;
+    state.mobileInIntro = false;
+    activateCard(targetIndex, 'forward');
+
+    state.steps.forEach((step, i) => {
+      if (i === targetIndex) {
+        step.classList.add('mobile-active');
+      } else {
+        step.classList.remove('mobile-active');
+      }
+    });
+  }
+
+  writeHash();
+}
+
+/**
  * Read the URL fragment on page load and jump to the encoded position.
  *
  * Must be called after initCardPool() and after the navigation mode is
@@ -171,7 +276,7 @@ export function isScrollDrivenHashUpdate() {
  * to be ready.
  *
  * Instant jump: uses duration: 0 for no scroll animation on load.
- * Panel applied after step position (D-10): step first, then panel via
+ * Panel applied after step position: step first, then panel via
  * setTimeout to let the card stack render before Bootstrap Offcanvas opens.
  *
  * Sub-panel links (g{n}, ps{n}):
@@ -188,25 +293,28 @@ export function applyDeepLinkOnLoad() {
   if (targetIndex < 0) return;
 
   if (state.lenis) {
-    // Desktop Lenis mode: instant scroll jump to the correct viewport position
+    // Desktop Lenis mode: instant scroll jump to the correct viewport position.
     // Position model: intro = 0, step 0 = 1 * innerHeight, step 1 = 2 * innerHeight …
-    // Bypass Lenis scrollTo entirely — the Snap plugin's lock mode prevents
-    // multi-step jumps via scrollTo. Instead, set the DOM scroll position
-    // directly and sync Lenis's internal state to match.
+    //
+    // Use Lenis's supported jump API rather than the old manual poke
+    // (stop → write scrollTop → set animatedScroll/targetScroll → rAF start).
+    // The poke did NOT land cleanly: Lenis re-syncs animatedScroll from the real
+    // scroll on start() and smooth-animates from the stale position, driving the
+    // per-frame IIIF lerp; at the integer step lerpIiifPosition early-returns,
+    // freezing the viewer at a partially-interpolated zoom. On a deep-linked load
+    // this was racy (measured on WebKit: #s4 landed at effNz ~9.4/1.06/10.56
+    // across reloads instead of the authored 2.9×). This is the same defect fixed
+    // in navigateToStep — see the fuller note there. immediate:true jumps with no
+    // animation (no lerp staircase; nothing for the Snap lock to interrupt);
+    // force:true overrides the lock/stopped state.
     const targetPx = (targetIndex + 1) * window.innerHeight;
-    state.lenis.stop();
-    document.documentElement.scrollTop = targetPx;
-    // Sync Lenis internal position to match the DOM
-    state.lenis.animatedScroll = targetPx;
-    state.lenis.targetScroll = targetPx;
+    state.lenis.scrollTo(targetPx, { immediate: true, force: true });
+    if (state.snap) state.snap.currentSnapIndex = targetIndex + 1; // keep Snap aligned
 
     // Activate card and sync state
     activateCard(targetIndex, 'forward');
     state.currentIndex = targetIndex;
     state.scrollPosition = targetIndex + 1;
-
-    // Restart Lenis after a frame so the Snap plugin sees the final position
-    requestAnimationFrame(() => { state.lenis.start(); });
   } else {
     // Button/mobile/iOS mode: no scroll surface — activate card directly
     state.currentMobileStep = targetIndex;
@@ -223,7 +331,7 @@ export function applyDeepLinkOnLoad() {
     });
   }
 
-  // Panel state (D-10): apply after step position, with delay for card render.
+  // Panel state: apply after step position, with delay for card render.
   // Open parent layers underneath the target: layer2 needs layer1 open first,
   // and glossary sub-links need their parent layer open underneath.
   if (parsed.layer !== null) {
