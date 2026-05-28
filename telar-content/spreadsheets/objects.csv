@@ -4,13 +4,8 @@ id_objeto,titulo,destacado,creador,descripcion,url_fuente,periodo,año,medio_gen
 "# Escríbelo en minúsculas y sin espacios. Si hace referencia a un objeto local, asegúrate de que el object_id coincida exactamente con el nombre del archivo (con o sin extensión; no importa).",# Incluye un título: este campo es obligatorio.,"# Describe lo que muestra la imagen para lectores de pantalla. Menciona el sujeto y los detalles clave. Evita ""Imagen de..."" — describe el contenido directamente. Si se deja vacío, se usa el título.","# Marca ""sí"" para destacar en la página de inicio",# La persona u organización que creó el objeto original.,"# Una breve descripción del objeto, que se muestra en la página de objetos de tu sitio publicado.",# Aquí puedes incluir un manifiesto IIIF y Telar se encargará del resto del trabajo.,"# El período histórico al que pertenece este objeto (por ejemplo, ""Período colonial"", ""Siglo XIX"").",# En formato AAAA — para filtrar y ordenar cronológicamente.,"# El medio o género del objeto (por ejemplo, ""Mapa"", ""Fotografía"", ""Grabado"").",# Términos separados por comas para filtrado de galería,"# Esto se mostrará encima del visor, a menos que indiques lo contrario en _config.yml.","# Línea de atribución que se muestra en el sitio publicado (por ejemplo, ""Cortesía de la Biblioteca de UCSB"").","# Telar genera miniaturas automáticamente, pero puedes anular este comportamiento especificando un archivo de imagen en esta columna."
 2a02aeb928e88f4f89e4837ce6fbc5b9,"East Elevation, Institute of Theoretical Physics at UCSB",,Michael Graves,"An east elevation view of the proposed Theoretical Physics Building, finished in 1994.",,,1994,,,AD&A Museum,Courtesy of AD&A Museum at UCSB,,2a02aeb928e88f4f89e4837ce6fbc5b9
 b1f1044e754f1e973db6dc1de41eacac,Long Range Plan---1990,,UCSB Planning Department,A map of the UCSB campus in 1990.,,,1990,Map,,AD&A Architecture and Design Collection,Courtesy of UCSB's AD&A Museum,,Long Range Plan---1990
-b81ca450b523b8bb3b91190f0ba23505,Floor Plan,,Michael Graves,,,,1994,,,AD&A Museum,,,Floor Plan
-img9575,HSSB foliage views,,,,,,,,,,,,HSSB foliage views
-img9576,HSSB site plan mockup,,,,,,,,,,,,HSSB site plan mockup
-img9587,HSSB perpective,,,,,,,,,,,,HSSB perpective
-img9588,HSSB tower,,,,,,,,,,,,HSSB tower
-img9589,HSSB mockup,,,,,,,,,,,,HSSB mockup
-img9590,HSSB mockup,,,,,,,,,,,,HSSB mockup
-img9592,HSSB tower,,,,,,,,,,,,HSSB tower
-img9593,HSSB mockup,,,,,,,,,,,,HSSB mockup
+sixth-floor,sixth floor,,,,,,,,,,,,sixth floor
+stair-tower-mockup,stair tower mockup,,,,,,,,,,,,stair tower mockup
 telar-placeholder,Telar placeholder,,Adelaida Ávila,,,,2026,,,,,,Telar placeholder
+third-floor,third floor,,,,,,,,,,,,third floor
+tower-mockup-2,tower mockup 2,,,,,,,,,,,,tower mockup 2
