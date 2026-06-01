@@ -2,37 +2,9 @@ object_id,title,featured,creator,description,source_url,period,year,medium_genre
 id_objeto,titulo,destacado,creador,descripcion,url_fuente,periodo,año,medio_genero,temas,fuente,credito,miniatura,texto_alt
 # Make it lower-case and avoid spaces. If you are referring to a local object please ensure the object_id matches the name of the file exactly (with or without the file extension – it doesn't matter).,# Please provide a title — this is required.,"# Describe what the image shows for screen readers. Mention the subject and key details. Avoid ""Image of..."" — describe the content directly. If empty, the title is used.","# Mark ""yes"" to feature on homepage",# The person or organization that created the original object.,"# A brief description of the object, shown on the objects page of your published site.",# Here you can include a IIIF manifest and Telar will do the rest of the work for you.,"# The historical period this object belongs to (e.g. ""Colonial period"", ""19th century"").",# In YYYY format — for filtering and sorting chronologically.,"# The medium or genre of the object (e.g. ""Map"", ""Photograph"", ""Engraving"").",# Comma-separated terms for gallery filtering,"# This will be overlaid over the viewer, unless you specify otherwise in _config.yml.","# Attribution line shown on the published site (e.g. ""Courtesy of UCSB Library"").","# Telar generates thumbnails automatically, but you can override this by specifying an image file in this column."
 "# Escríbelo en minúsculas y sin espacios. Si hace referencia a un objeto local, asegúrate de que el object_id coincida exactamente con el nombre del archivo (con o sin extensión; no importa).",# Incluye un título: este campo es obligatorio.,"# Describe lo que muestra la imagen para lectores de pantalla. Menciona el sujeto y los detalles clave. Evita ""Imagen de..."" — describe el contenido directamente. Si se deja vacío, se usa el título.","# Marca ""sí"" para destacar en la página de inicio",# La persona u organización que creó el objeto original.,"# Una breve descripción del objeto, que se muestra en la página de objetos de tu sitio publicado.",# Aquí puedes incluir un manifiesto IIIF y Telar se encargará del resto del trabajo.,"# El período histórico al que pertenece este objeto (por ejemplo, ""Período colonial"", ""Siglo XIX"").",# En formato AAAA — para filtrar y ordenar cronológicamente.,"# El medio o género del objeto (por ejemplo, ""Mapa"", ""Fotografía"", ""Grabado"").",# Términos separados por comas para filtrado de galería,"# Esto se mostrará encima del visor, a menos que indiques lo contrario en _config.yml.","# Línea de atribución que se muestra en el sitio publicado (por ejemplo, ""Cortesía de la Biblioteca de UCSB"").","# Telar genera miniaturas automáticamente, pero puedes anular este comportamiento especificando un archivo de imagen en esta columna."
-2a02aeb928e88f4f89e4837ce6fbc5b9,"East Elevation, Institute of Theoretical Physics at UCSB",,Michael Graves,"An east elevation view of the proposed Theoretical Physics Building, finished in 1994.",,,1994,,,AD&A Museum,Courtesy of AD&A Museum at UCSB,,2a02aeb928e88f4f89e4837ce6fbc5b9
-b1f1044e754f1e973db6dc1de41eacac,Long Range Plan---1990,,UCSB Planning Department,A map of the UCSB campus in 1990.,,,1990,Map,,AD&A Architecture and Design Collection,Courtesy of UCSB's AD&A Museum,,Long Range Plan---1990
-b81ca450b523b8bb3b91190f0ba23505,,,,,,,,,,,,,
-bw-mockup,b&w mockup,,,,,,,,,,,,b&w mockup
-fourth-floor,fourth floor,,,,,,,,,,,,fourth floor
-ground-floor,ground floor,,,,,,,,,,,,ground floor
-hssb-mockup-1,HSSB mockup 1,,,,,,,,,,,,HSSB mockup 1
-hssb-mockup-2,HSSB mockup 2,,,,,,,,,,,,HSSB mockup 2
-img5454,IMG_5454,,,,,,,,,,,,IMG_5454
-img5455,IMG_5455,,,,,,,,,,,,IMG_5455
-img5456,IMG_5456,,,,,,,,,,,,IMG_5456
-img9575,,,,,,,,,,,,,
-img9576,,,,,,,,,,,,,
-img9587,,,,,,,,,,,,,
-img9588,,,,,,,,,,,,,
-img9589,,,,,,,,,,,,,
-img9590,,,,,,,,,,,,,
-img9592,,,,,,,,,,,,,
-img9593,,,,,,,,,,,,,
-mockup-3,mockup 3,,,,,,,,,,,,mockup 3
-mockup-4,mockup 4,,,,,,,,,,,,mockup 4
-perpective-sketches,perpective sketches,,,,,,,,,,,,perpective sketches
-screenshot-20260513-at-101027-pm,Screenshot 2026-05-13 at 10.10.27 PM,,,,,,,,,,,,Screenshot 2026-05-13 at 10.10.27 PM
-screenshot-20260513-at-101039-pm,Screenshot 2026-05-13 at 10.10.39 PM,,,,,,,,,,,,Screenshot 2026-05-13 at 10.10.39 PM
-screenshot-20260513-at-101056-pm,Screenshot 2026-05-13 at 10.10.56 PM,,,,,,,,,,,,Screenshot 2026-05-13 at 10.10.56 PM
-screenshot-20260514-at-120142-pm,Screenshot 2026-05-14 at 12.01.42 PM,,,,,,,,,,,,Screenshot 2026-05-14 at 12.01.42 PM
-screenshot-20260528-at-11018-pm,Screenshot 2026-05-28 at 1.10.18 PM,,,,,,,,,,,,Screenshot 2026-05-28 at 1.10.18 PM
-second-floor,second floor,,,,,,,,,,,,second floor
-site-map,site map,,,,,,,,,,,,site map
-sixth-floor,sixth floor,,,,,,,,,,,,sixth floor
-stair-tower-mockup,stair tower mockup,,,,,,,,,,,,stair tower mockup
+bw-mockup,Mockup of HSSB (Black & White),,"Zimmer, Gunsul, Frasca Partnership","A perspective draft of a potential HSSB design, in black and white.",,,1991,,,Jarett Henderson,,,Mockup of HSSB (Black & White)
+fourth-floor,Fourth Floor Plan of HSSB,,"Zimmer, Gunsul, Frasca Partnership",A floor plan of the HSSB's fourth floor.,,,1991,,,Jarett Henderson,,,Fourth Floor Plan of HSSB
+ground-floor,Ground Floor Plan of HSSB,,"Zimmer, Gunsul, Frasca Partnership",The floor plan of the HSSB's ground floor.,,,1991,,,Jarett Henderson,,,Ground Floor Plan of HSSB
+hssb-mockup-1,Mockup of HSSB (Color),,"Zimmer, Gunsul, Frasca Partnership",A full-color mockup of a potential HSSB design.,,,1991,,,Jarett Henderson,,,Mockup of HSSB (Color)
+hssb-mockup-2,Mockup of HSSB with light tower,,"Zimmer, Gunsul, Frasca Architects","A full-color mockup of a potential HSSB design, with a light tower as a central feature.",,,1991,,,Jarett Henderson,,,Mockup of HSSB with light tower
 telar-placeholder,Telar placeholder,,Adelaida Ávila,,,,2026,,,,,,Telar placeholder
-third-floor,third floor,,,,,,,,,,,,third floor
-tower-mockup-2,tower mockup 2,,,,,,,,,,,,tower mockup 2
