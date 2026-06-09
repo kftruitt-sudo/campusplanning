@@ -1,3 +1,5 @@
 order,story_id,title,subtitle,byline,private,show_sections
 orden,id_historia,titulo,subtitulo,firma,privada,mostrar_secciones
 0,blank_template,Humanities and Social Sciences Building (HSSB),1996,By Katie Truitt,,
+1,interactive-learning-pavilion-kvha,Interactive Learning Pavilion (ILP),2023,Katie Truitt,yes,
+4,campus-history-1zz5,History of UCSB's Goleta Campus,,Katie Truitt,,

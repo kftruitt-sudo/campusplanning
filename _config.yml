@@ -3,14 +3,12 @@
 
 # Site Settings
 title: "UCSB's Campus Planning and Architecture: 1996 vs. 2026"
-description: "UCSB's current campus has been through many evolutions since it was first established in 1944. Originally one of the most densely populated Chumash regions in California, the area that is now Goleta has a history that goes back thousands of years. UCSB is still on unceded Chumash land. During World War II, this area served as a US Marine Air Base. Since then, the campus has had many architectural eras, many of which are still visible today!
-
-This site explores UCSB's campus in the 1990s through campus planning documents and blueprints, all sourced from archives accessible to UCSB students. The main building of focus is the Humanities and Social Sciences Building (HSSB), finished in 1996; this will be compared to the Interactive Learning Pavilion (ILP), which was finished in 2023. "
+description: "UCSB's current campus has been through many evolutions since it was first established in 1944. Originally one of the most densely populated Chumash regions in California, the area that is now Goleta has a history that goes back thousands of years. UCSB is still on unceded Chumash land. During World War II, this area served as a US Marine Air Base. Since then, the campus has had many architectural eras, many of which are still visible today!\n\nThis site explores UCSB's campus in the 1990s through campus planning documents and blueprints, all sourced from archives accessible to UCSB students. The main building of focus is the Humanities and Social Sciences Building (HSSB), finished in 1996; this will be compared to the Interactive Learning Pavilion (ILP), which was finished in 2023. "
 url: "https://kftruitt-sudo.github.io"
 baseurl: "/test"
 author: "Katie Truitt"
 email: ""
-telar_theme: "trama" # Options: trama, paisajes, neogranadina, santa-barbara, austin, or custom
+telar_theme: "santa-barbara"
 logo: ""
 telar_language: en
 collection_mode: false

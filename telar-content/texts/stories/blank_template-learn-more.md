@@ -2,5 +2,4 @@
 title: "Learn more"
 ---
 
-Like most architectural projects, the HSSB went through many different iterations. As mentioned, UCSB's goal with the HSSB was to create a unifying building on campus that catered to the needs of the Humanities, Social Sciences, and Arts. ZGF took this brief and created a massive amount of mock-ups to see which designs would be the most visually pleasing while still remaining within the projected budget. ![HSSB mockup 2](https://kftruitt-sudo.github.io/test/iiif/objects/hssb-mockup-2/hssb-mockup-2.jpg) 
-
+When the HSSB was first ideated in the late 1980s, UCSB's Planning Committee aimed to expand space for various humanities and social sciences-focused departments. This was characterized by a plan that mixed classrooms, faculty offices, research labs, and more, all under one roof. All of this served to improve UCSB's reputation as a research institution, increasing its prestige as a university. 
