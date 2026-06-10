@@ -1,0 +1,5 @@
+---
+title: "Learn more"
+---
+
+In terms of how history is taught, it's worth investigating *why* there is so little emphasis on the UCSB Repository Archaeological and Ethnographic Collections, especially considering the fairly recent opening of the Repatriation Office in 2024. Some could argue that, as an accredited research institution, UCSB has the obligation to thoroughly research, document, and make available as much information as possible regarding the fields of archaeology and anthropology. Ultimately, this view is one that prioritizes academic research and prestige over the dignity of hundreds of Indigenous ancestors and their living descendants. While it may feel counterintuitive to many researchers, the lack of information available to the public is actually a testament to the diligence of the Santa Ynez, Barbareño, and Coastal Bands, as well as recent changes by Dr. Radde and his team. 

@@ -2,4 +2,4 @@
 title: "Learn more"
 ---
 
-![Mission](https://kftruitt-sudo.github.io/test/iiif/objects/c3239bdeb7aaaf4c3b4d5d11b721d4b4/c3239bdeb7aaaf4c3b4d5d11b721d4b4.jpg)
+It’s critical to understand that this is an umbrella term that includes multiple governing tribes belonging to the Chumash culture. [As noted by the Coastal Band of the Chumash Nation](https://www.coastalband.org/who-we-are), there are 7 governing tribes: the [yak titʸu titʸu yak tiłhini Northern Chumash Tribe of San Luis Obispo and Region](https://yttnorthernchumashtribe.com/), the [Northern Chumash Tribal Council](https://northernchumash.org/), the [Santa Ynez Band of Chumash Indians](https://chumash.gov/), the [Coastal Band of the Chumash Nation](https://www.coastalband.org/), the [Barbareño Band of Chumash Indians](https://bbc-indians.com/), the [Barbareño Chumash Tribal Council](https://www.bctcsb.com/index.html), and the [Barbareño/Ventureño Band of Mission Indians](https://www.bvbmi.com/).
