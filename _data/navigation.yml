@@ -5,3 +5,6 @@ menu:
   - title_en: "Glossary"
     titulo_es: "Glossary"
     url: /glossary/
+  - title_en: "Further Reading"
+    titulo_es: "Further Reading"
+    url: /further-reading/
