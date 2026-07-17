@@ -37,7 +37,7 @@ jobs:
   python:
     name: Python Unit Tests
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.run_python }}
+    if: ${{ (github.repository == 'UCSB-AMPLab/telar' || github.repository == 'juancobo/telar') && (github.event_name != 'workflow_dispatch' || inputs.run_python) }}
 
     steps:
       - name: Checkout repository
@@ -60,7 +60,7 @@ jobs:
   javascript:
     name: JavaScript Unit Tests
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.run_javascript }}
+    if: ${{ (github.repository == 'UCSB-AMPLab/telar' || github.repository == 'juancobo/telar') && (github.event_name != 'workflow_dispatch' || inputs.run_javascript) }}
 
     steps:
       - name: Checkout repository
