@@ -1,9 +1,9 @@
 menu:
   - title_en: "Objects"
-    titulo_es: "Objects"
+    titulo_es: "Objetos"
     url: /objects/
   - title_en: "Glossary"
-    titulo_es: "Glossary"
+    titulo_es: "Glosario"
     url: /glossary/
   - title_en: "Further Reading"
     titulo_es: "Further Reading"

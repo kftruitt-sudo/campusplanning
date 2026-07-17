@@ -30,7 +30,7 @@ collection_interface:
 # Story Protection (optional)
 # Stories with protected=yes in project.csv will be encrypted.
 # Viewers need this key to unlock protected stories.
-story_key: 
+story_key: ""
 
 # Google Sheets Integration (optional)
 # Manage content via Google Sheets instead of editing CSV files directly.
