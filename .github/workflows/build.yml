@@ -34,7 +34,7 @@ name: Build and Deploy Telar Site
 # build time. Sites without audio objects skip audio tool installation and
 # processing entirely — zero friction for image-only sites.
 #
-# Version: v1.5.0
+# Version: v1.6.0
 
 on:
   push:
@@ -54,6 +54,18 @@ permissions:
   contents: write
   pages: write
   id-token: write
+
+# GitHub Pages allows only one in-progress deployment per repository. When a
+# site is pushed to several times in quick succession (for example, the Telar
+# Compositor's site-creation flow fires two commits and a manual run within the
+# same second), the extra build runs would otherwise race on the single Pages
+# deployment slot — the losers fail their "Deploy to GitHub Pages" step and the
+# owner gets a spurious build-failure email, even though a sibling run deploys
+# the site correctly. Grouping the runs and cancelling superseded ones keeps the
+# newest commit's build as the single winner with no failure noise.
+concurrency:
+  group: "pages-${{ github.ref }}"
+  cancel-in-progress: true
 
 jobs:
   build-and-deploy:
@@ -75,7 +87,7 @@ jobs:
         # the SHA means this build can only ever run the exact reviewed code.
         # Dependabot (.github/dependabot.yml, github-actions ecosystem) raises a PR
         # when a newer release is published. Bump the trailing comment with the SHA.
-        uses: ruby/setup-ruby@afeafc3d1ab54a631816aba4c914a0081c12ff2f # v1.310.0
+        uses: ruby/setup-ruby@89f90524b88a01fe6e0b732220432cc6142926af # v1.313.0
         with:
           ruby-version: '3.2'
           bundler-cache: true
@@ -90,11 +102,11 @@ jobs:
           sudo apt-get update -q
           sudo apt-get install -y libvips-tools
 
-      - name: Install audio processing tools (audiowaveform + ffmpeg)
+      - name: Install audio processing tools (audiowaveform)
         run: |
           # Only install if audio objects exist (zero friction for image-only sites)
           if ls telar-content/objects/*.mp3 telar-content/objects/*.ogg telar-content/objects/*.m4a 2>/dev/null | head -1 | grep -q .; then
-            echo "Audio objects detected - installing audiowaveform and ffmpeg"
+            echo "Audio objects detected - installing audiowaveform"
             # audiowaveform is installed from a third-party Ubuntu PPA maintained
             # by Chris Needham (BBC R&D). This is an unpinned external package
             # source and an explicit trust dependency. The long-term hardening is
@@ -102,7 +114,7 @@ jobs:
             # and install it with dpkg instead of fetching from the live PPA.
             sudo add-apt-repository -y ppa:chris-needham/ppa
             sudo apt-get update -q
-            sudo apt-get install -y audiowaveform ffmpeg
+            sudo apt-get install -y audiowaveform
           else
             echo "No audio objects found - skipping audio tool installation"
           fi
@@ -353,6 +365,14 @@ jobs:
             echo "⚠️  Warning: No cached IIIF tiles found. Site may have missing images."
             echo "⚠️  Run a full build with IIIF regeneration to create tiles."
           fi
+
+      - name: Encrypt protected stories
+        # Post-build encryption and leak gate for protected stories.
+        # Runs unconditionally, immediately before the artifact upload, so
+        # the gate scans exactly what deploys. No-op when no story is
+        # protected; fails the build rather than publish protected plaintext.
+        run: |
+          python scripts/encrypt_protected_stories.py
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
