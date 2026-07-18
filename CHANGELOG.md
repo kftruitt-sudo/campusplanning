@@ -4,6 +4,129 @@ All notable changes to Telar will be documented in this file.
 
 ## [Unreleased]
 
+## [1.6.2] - 2026-07-17
+
+Upgrade environment repair release. Fixes the "Upgrade Telar" GitHub Actions workflow, which has failed with a Python `ModuleNotFoundError` for every site upgrading to v1.5.0 or later — the workflow installed only two of the packages the upgrade's data-regeneration step needs. `upgrade.py` now installs its own dependencies as a fallback, so upgrades succeed even on sites whose workflow file predates this fix (GitHub does not allow automated upgrades to modify workflow files). Also repairs two regressions from earlier releases: a `package-lock.json` left out of sync by the v1.6.0 upgrade, and a missing guard that let Telar's internal framework tests run — and fail — on user sites. Tooling and workflows only — no site content, configuration, or display changes.
+
+### Fixed
+
+- **Upgrade workflow `ModuleNotFoundError`.** The "Upgrade Telar" GitHub Actions workflow installed only `pyyaml` and `pandas`, but the upgrade's data-regeneration step also needs `markdown`, `Pillow`, `jinja2`, and `cryptography`. No workflow-driven upgrade targeting v1.5.0 or later could have succeeded. The workflow now installs the full `requirements.txt`, matching the build workflow.
+- **Upgrade tooling now self-sufficient.** `upgrade.py` installs its own dependencies from the release's tooling bundle before regenerating data, with a fallback to the site's own copy. This means upgrades succeed even on sites that haven't recopied the fixed workflow file above.
+- **Corrected `package-lock.json`.** The v1.6.0 upgrade left `package-lock.json` out of sync with `package.json`, which broke `npm ci` in site test workflows. This release ships a regenerated, matching pair, and the v1.6.2 migration re-applies both together on upgrade.
+- **Framework tests no longer run on user sites.** A guard that keeps Telar's own test suite from running on user sites was dropped in v1.5.0, causing spurious test-failure emails whenever dependabot opened a pull request on a user site. The guard is restored.
+- **No more duplicate upgrade issues.** Re-running the "Upgrade Telar" workflow no longer files a second upgrade issue alongside an existing open one for the same version.
+
+### Removed
+
+- **`.github/dependabot.yml`.** Dependency updates are managed through the Telar release process, not per-site. The file is removed from the template and, via the v1.6.2 migration, from existing user sites. Repository-level GitHub security alerts are unaffected.
+
+### Notes
+
+- Migration script `scripts/migrations/v161_to_v162.py` upgrades automatically from v1.6.1 (and chains through from earlier versions). Two manual steps: recopying `.github/workflows/upgrade.yml` from the template is recommended but not urgent, since `upgrade.py` now self-installs its dependencies regardless; recopying `.github/workflows/telar-tests.yml` stops Telar's framework tests from running on your site. The `dependabot.yml` removal is informational only.
+- New consistency tests run in Telar's own CI on every pull request to catch this class of workflow/dependency mismatch before it ships again.
+
+## [1.6.1] - 2026-07-11
+
+Upgrade-tooling fix release. The v1.6.0 upgrade could not actually be applied: the upgrade script never registered the v1.6.0 migration, so direct upgrade runs stopped at v1.5.4 while reporting success — and the release was missing the verified tooling package the "Upgrade Telar" workflow downloads, so workflow runs failed before making any changes. Both are fixed; upgrading to v1.6.1 applies everything v1.6.0 contained. No site content, configuration, or display changes.
+
+### Fixed
+
+- **Upgrade chain repaired.** `scripts/upgrade.py` now registers the v1.5.4 → v1.6.0 migration (the migration itself shipped with v1.6.0 but was never wired in) and the new v1.6.0 → v1.6.1 step. Upgrades from any earlier version now run through to v1.6.1 and stamp the version they actually installed.
+- **Verified tooling package published.** The `telar-scripts-v1.6.1.tar.gz` release asset and its checksum, which the "Upgrade Telar" workflow requires since v1.5.0, ship with this release (v1.6.0 shipped without them, so the workflow failed closed before touching any site).
+
+### Notes
+
+- If an upgrade run reported success but left your site at v1.5.4, run the upgrade again — the chain now continues through to v1.6.1. If the "Upgrade Telar" workflow failed with a download error, that was this bug.
+- No site was ever left broken or half-upgraded: the workflow path failed before starting, and the direct path completed a valid upgrade to v1.5.4.
+
+## [1.6.0] - 2026-07-10
+
+Code health release. Housekeeping across the whole framework — verified dead-code removal, consolidation of duplicated logic, honest labelling of generated vs source files — plus a rebuilt private-stories pipeline, a localization sweep, and a long tail of fixes. Framework files and language packs upgrade automatically; one manual step is required for sites that use private stories (see Notes).
+
+### Changed
+
+- **Private stories rebuilt.** Encryption now happens after the site is built, from the fully rendered page: unlocked stories render glossary links, LaTeX, and localized errors exactly like open stories. The build scans its own output for private content before publishing, and a site with private stories and an outdated build workflow fails on purpose rather than publishing unprotected.
+- **Localization sweep.** Interface text that was hardcoded in English now follows the site language (media-type labels, audio controls, story chrome, glossary headings, panel errors, carousel controls, degraded-mode navigation, upgrade alerts, embed banner fallback); pipeline warnings and the upgrade summary are generated in the site's language.
+- **Theme colours where they belong.** Headings, glossary letters, filter toggles, and panel blockquotes follow the active theme; DEMO labels use the brand colour; the accordion focus ring is visible again.
+- **Code health.** Over 750 lines of verified dead code removed; duplicated logic consolidated to single homes (media-type lists, SCSS mixins, pipeline helpers, IIIF thumbnail resolution, object-page theme/video logic, KaTeX configuration); generated files carry generated-file banners and are marked linguist-generated; comments state constraints instead of narrating history. No reader-facing changes.
+
+### Fixed
+
+- Alt text from the objects CSV now reaches object pages and story steps (from Ana María Cárdenas Gasca's fix).
+- Audio clips honour `clip_start` on first play, not only after looping.
+- LaTeX in a step's question or answer (without layer text) now loads the renderer.
+- Local tile generation without libvips produces tiles the viewer can actually request; the generator names its backend and recommends libvips.
+- The objects page no longer makes doomed image-server requests for video/audio objects; thumbnail resolution is hardened across IIIF profile variants.
+- Panels: no instance leak on reopen, state stays in sync on outside dismissal, close icon shows in vertical/embed layouts.
+- Embedded stories use the site-wide 1024px responsive boundary; button navigation starts from the intro card; uppercase audio extensions recognised; palette-transparency images composite onto white; a text step without coordinates shows the full object; title-card text renders as plain text per its contract.
+
+### Notes
+
+- **Manual step for private-story sites:** v1.6.0's build workflow adds the encryption step, and GitHub does not allow automated upgrades to modify workflow files — recopy `build.yml` from the template (the Compositor does this automatically). Until then, marking a story `private: yes` fails the build by design. See the release notes for details.
+- Language packs are replaced wholesale on upgrade, as in previous releases — re-apply customisations.
+- Known issues: two long-standing story-engine behaviours (a card briefly lingering over the title after "Back to Start"; the URL step fragment not updating during ordinary scrolling) ship documented, to be fixed at the root by a planned story-engine restructure.
+
+## [1.5.4] - 2026-06-29
+
+CI/build fix release. Adds a GitHub Pages concurrency group to the build workflow so rapid successive builds of the same repository no longer race on Pages' one-deployment-per-repo limit. CI only — no content, schema, or configuration changes. Upgrade in place or simply redeploy.
+
+### Fixed
+
+- **Spurious "build failed" emails on rapid successive builds.** GitHub Pages allows only one in-progress deployment per repository, so when several builds started within the same second (for example, when a new site is created and multiple commits plus a manual run land together) the losing runs failed their "Deploy to GitHub Pages" step and emailed the owner, even though the site deployed correctly. Build runs are now grouped per branch with a `concurrency` setting and superseded runs are cancelled, so the newest build wins cleanly with no failure noise.
+
+### Notes
+
+- The only changed framework file is `.github/workflows/build.yml`. The Telar Compositor updates it automatically on upgrade; sites upgrading via the "Upgrade Telar" Actions workflow or locally must add the `concurrency` block by hand, since GitHub does not allow automated upgrades to modify workflow files (see the release notes for the exact snippet).
+
+## [1.5.3] - 2026-06-23
+
+Internationalization fix release. Built-in interface text that still showed in English on Spanish-language sites (`telar_language: es`) now follows the site language. Display only — no content, schema, or configuration changes. Upgrade in place or simply redeploy.
+
+### Fixed
+
+- **Interface text now follows the site language.** Several built-in strings were hardcoded in English and stayed untranslated on Spanish sites: the "Back to Collection" and "Back to Glossary" links, the coordinate tool button with its Copy X / Y / Zoom and copy-manifest tooltips, the "Image Viewer Unavailable" alerts, the Google Sheets and theme configuration-error banners, the thumbnail "Loading..." placeholders, and the footer credit line. They now read from the language pack and follow `telar_language`.
+- **Objects and glossary headings now translated.** The objects and glossary page headings, and the Medium/Genre and media-type filter labels on the objects page, now follow the site language instead of showing in English.
+- **Duplicate browser-tab title on translated pages.** Translated pages emitted two `<title>` tags, and the second (added by the SEO plugin) was always English. Each page now has a single, language-aware title. The home, objects, and glossary browser-tab titles follow the site language through a new optional `title_key` field (see Migration).
+
+### Changed
+
+- **Objects page wording (English sites).** The objects page now takes its heading and browser-tab title from the language pack: the browser-tab title reads "Objects" (was "Objects in the Stories") and the page heading reads "See the objects behind the stories". Spanish sites already used these strings.
+
+### Notes
+
+- Social-share preview titles (`og:title` / `twitter:title`) still come from the static English page title and remain English on translated sites. The SEO plugin binds them to page front matter and cannot suppress just the social title; this is a known, separate limitation.
+
+## [1.5.2] - 2026-06-13
+
+Small fix release for the validation warning banners. Display only — no content changes and no manual steps. Upgrade in place or simply redeploy.
+
+### Fixed
+
+- **Glossary warning message.** When a story references a glossary term that doesn't exist, the warning showed a literal `{{ file_path }}` placeholder and pointed only to `telar-content/texts/glossary/`. It now names the missing term cleanly and points to your glossary spreadsheet as well as the markdown folder.
+- **Story banner heading shown twice.** The warning banner on a story's intro card repeated the same line as both its heading and its description; it now has a proper heading.
+- **Homepage warning banners now translated.** The "Object configuration issues detected" and "Story configuration issues detected" banners on the homepage (headings and the "Navigate to ... to see more details." line) were hardcoded in English; they now follow the site language.
+
+### Dependencies
+
+- Routine dependency updates: `lenis`, `esbuild`, `vitest`, `@vimeo/player` (npm); `cryptography`, `jinja2`, `pillow-heif`, `playwright`, `pyyaml` (Python); `ruby/setup-ruby` (CI). No behavior change.
+
+### Notes
+
+- The README version badge had lagged at 1.4.0 through the last two releases; it is now correct.
+
+## [1.5.1] - 2026-06-10
+
+Small fix release for glossary auto-linking. The `[[term]]` syntax now works in story step texts, and glossary terms match regardless of letter case. Runtime and tooling only — no content changes and no migration. Upgrade in place or simply redeploy.
+
+### Fixed
+
+- **Glossary links in story step texts.** Writing `[[term]]` in a story step's answer text now creates a glossary link, just as it already did inside layer panels. Previously the brackets published as plain text. The question line is a heading and is intentionally left as plain text.
+- **Case-insensitive glossary terms.** `[[Term]]`, `[[term]]`, and `[[TERM]]` now all resolve to the same glossary entry, matching whatever id the glossary defines (so an acronym written `[[IIIF]]` links correctly). The link points at the glossary entry's own page regardless of how the term was typed.
+
+### Notes
+
+- In password-protected stories, a `[[term]]` in the step text shows as plain text (the term's name) rather than a clickable link. Glossary links inside layer panels still work in protected stories. (Inline glossary links in the step texts of protected stories may come in a later release.)
+
 ## [1.5.0] - 2026-06-06
 
 Robustness and security release. Runtime and tooling only — no content changes; existing stories, objects, and configuration continue to work unchanged. This release hardens the build pipeline, the story viewer, and the automatic upgrade workflow, adds defensive input handling and output escaping throughout, and removes the last third-party CDN dependency by vendoring the audio waveform library. The automatic upgrade applies everything except two manual steps (see Migration).
